@@ -45,3 +45,19 @@ jobs:
           SERVERCHAN_SENDKEY: ${{ secrets.SERVERCHAN_SENDKEY }}
           BARK_URL: ${{ secrets.BARK_URL }}
           SELECT_CHANNEL: ${{ secrets.SELECT_CHANNEL }}
+          
+      - name: Create an issue on failure
+        if: ${{ failure() }}
+        uses: JasonEtco/create-an-issue@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          filename: .github/ISSUE_TEMPLATE/attendance-failure.md
+
+      - name: Add a comment to an existing issue on success
+        if: ${{ success() }}
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          issue-number: 1 
+          body: |
+            The daily attendance job has successfully completed.
